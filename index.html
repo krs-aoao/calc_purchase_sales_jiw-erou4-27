@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>新売価計算ツール</title>
+  <title>新売価・上げ率 計算ツール</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,17 +14,18 @@
     .container {
       display: inline-block;
       background: white;
-      padding: 20px;
+      padding: 20px 30px;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     input {
-      margin: 10px;
+      margin: 8px 0;
       padding: 8px;
-      width: 150px;
+      width: 180px;
       font-size: 16px;
     }
     button {
+      margin-top: 15px;
       padding: 10px 20px;
       font-size: 16px;
       border: none;
@@ -46,31 +47,43 @@
 </head>
 <body>
   <div class="container">
-    <h2>新売価 計算ツール</h2>
+    <h2>新売価・上げ率 計算ツール</h2>
+
     <label>旧売価（円）:</label><br>
     <input type="number" id="oldPrice" placeholder="旧売価を入力"><br>
 
     <label>変更率（％）:</label><br>
     <input type="number" id="percent" placeholder="％を入力"><br>
 
-    <button onclick="calcNewPrice()">計算する</button>
+    <label>新仕入れ（円）:</label><br>
+    <input type="number" id="newCost" placeholder="新仕入れを入力"><br>
+
+    <button onclick="calc()">計算する</button>
 
     <div id="result"></div>
   </div>
 
   <script>
-    function calcNewPrice() {
+    function calc() {
       const oldPrice = parseFloat(document.getElementById('oldPrice').value);
       const percent = parseFloat(document.getElementById('percent').value);
+      const newCost = parseFloat(document.getElementById('newCost').value);
 
-      if (isNaN(oldPrice) || isNaN(percent)) {
-        document.getElementById('result').innerText = "数値を正しく入力してください。";
+      if (isNaN(oldPrice) || isNaN(percent) || isNaN(newCost)) {
+        document.getElementById('result').innerText = "数値をすべて入力してください。";
         return;
       }
 
+      // 新売価を計算
       const newPrice = oldPrice * (1 + percent / 100);
-      document.getElementById('result').innerText =
-        `新売価: ${newPrice.toFixed(2)} 円`;
+
+      // 上げ率を計算
+      const increaseRate = ((newPrice - newCost) / newCost) * 100;
+
+      // 結果表示
+      document.getElementById('result').innerHTML =
+        `新売価：${newPrice.toFixed(2)} 円<br>` +
+        `上げ率：${increaseRate.toFixed(2)} %`;
     }
   </script>
 </body>
